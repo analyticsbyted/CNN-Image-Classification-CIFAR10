@@ -1,11 +1,8 @@
 name: Deploy to Hugging Face Hub
 
 on:
-  # Trigger the workflow every time you push to the `main` branch
   push:
     branches: [main]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -18,10 +15,24 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Push to Hub
-        uses: huggingface/push-to-hub-action@main
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          hf_token: ${{ secrets.HF_TOKEN }}
-          repo_id: "analyticsbyted/CIFAR10-Classifier"
-          repo_type: space
-          target_path: "."
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install huggingface_hub
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "
+          from huggingface_hub import HfApi
+          api = HfApi(token=HF_TOKEN)
+          api.upload_folder(
+              folder_path='.',
+              repo_id='analyticsbyted/CIFAR10-Classifier',
+              repo_type='space'
+          )
+          "
