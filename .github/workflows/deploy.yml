@@ -19,7 +19,7 @@ jobs:
           lfs: true
 
       - name: Push to Hub
-        uses: huggingface/push-to-hub-action@v1
+        uses: huggingface/push-to-hub-action@main
         with:
           hf_token: ${{ secrets.HF_TOKEN }}
           repo_id: "analyticsbyted/CIFAR10-Classifier"
