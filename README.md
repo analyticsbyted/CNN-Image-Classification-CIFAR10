@@ -1,43 +1,103 @@
-# CIFAR-10 Image Classification
+# CIFAR-10 Image Classification with a Deep Convolutional Neural Network
 
-This repository contains code and resources for a Convolutional Neural Network (CNN) model developed to classify images from the CIFAR-10 dataset. The goal of the project is to accurately classify images into ten different classes, including objects like airplanes, automobiles, birds, cats, and more.
+This project provides a deep learning model to classify images from the CIFAR-10 dataset. The model is a Convolutional Neural Network (CNN) built with TensorFlow and Keras, and it achieves approximately **79% accuracy** on the test set.
 
-## Dataset
+## Final Performance
 
-The CIFAR-10 dataset consists of 60,000 32x32 color images in 10 classes, with 6,000 images per class. The dataset is split into training, validation, and test sets. This was sourced at [CIFAR-10 Dataset](https://www.cs.toronto.edu/~kriz/cifar.html)
+The model's performance on the test set is summarized below:
+
+**Classification Report:**
+```
+              precision    recall  f1-score   support
+
+           0       0.73      0.86      0.79      1000
+           1       0.88      0.91      0.89      1000
+           2       0.72      0.73      0.73      1000
+           3       0.66      0.61      0.63      1000
+           4       0.75      0.76      0.75      1000
+           5       0.75      0.69      0.72      1000
+           6       0.84      0.85      0.84      1000
+           7       0.80      0.85      0.83      1000
+           8       0.95      0.78      0.86      1000
+           9       0.83      0.86      0.84      1000
+
+    accuracy                           0.79     10000
+   macro avg       0.79      0.79      0.79     10000
+weighted avg       0.79      0.79      0.79     10000
+```
+
+**Confusion Matrix:**
+
+![Confusion Matrix](confusion_matrix.png)
 
 ## Model Architecture
 
-The CNN model used for image classification consists of multiple convolutional and pooling layers, followed by fully connected layers with a softmax activation function for multi-class classification. The model architecture is as follows:
+The model is a Sequential CNN designed to learn hierarchical features from the input images. The architecture consists of data augmentation layers, convolutional blocks, and a final classification head.
 
-model = Sequential()
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3), name='conv_1'))
-model.add(MaxPooling2D((2, 2), name='maxpool_1'))
-model.add(Conv2D(64, (3, 3), activation='relu', name='conv_2'))
-model.add(Conv2D(128, (3, 3), activation='relu', name='conv_3'))
-model.add(MaxPooling2D((2, 2), name='maxpool_2'))
-model.add(Flatten())
-model.add(Dense(128, activation='relu', name='dense_1'))
-model.add(Dropout(0.25))
-model.add(Dense(10, activation='softmax', name='output'))
+![Model Architecture](model_architecture.png)
 
+### Key Components:
 
-## Usage
+*   **Data Augmentation:** To prevent overfitting and improve generalization, the model applies random transformations to the training images on-the-fly:
+    *   `RandomFlip`: Horizontally flips images.
+    *   `RandomRotation`: Applies a random rotation of up to 10%.
+    *   `RandomZoom`: Randomly zooms into images by up to 10%.
 
-1. Install the required dependencies listed in the `requirements.txt` file.
-2. Preprocess the dataset by resizing the images and normalizing pixel values.
-3. Train the model using the training set and evaluate its performance using the validation set.
-4. Test the trained model on the test set and measure its accuracy and other evaluation metrics.
-5. Experiment with different techniques such as fine-tuning the model architecture, optimization methods, or transfer learning for further improvement.
+*   **Convolutional Blocks:** The core of the model consists of three convolutional blocks. Each block is designed to learn increasingly complex patterns.
+    *   `Conv2D`: These layers use 3x3 filters to scan for features like edges, textures, and shapes.
+    *   `BatchNormalization`: This layer is applied after each convolutional layer to stabilize and accelerate training by normalizing the activations.
+    *   `MaxPool2D`: This layer downsamples the feature maps, reducing computational complexity and making the learned features more robust.
 
-## Results and Analysis
+*   **Classification Head:** After the features are extracted, they are flattened into a one-dimensional vector and passed through a dense classification head.
+    *   `Flatten`: Converts the 2D feature maps into a 1D vector.
+    *   `Dense`: A fully connected layer that learns to combine the high-level features.
+    *   `Dropout`: A regularization technique that randomly sets 25% of the input units to 0 during training to prevent overfitting.
+    *   `Softmax`: The final output layer with 10 units (one for each class), which produces a probability distribution over the classes.
 
-The trained model achieved an accuracy of approximately 68% on the test set. Evaluation metrics including loss, accuracy, precision, recall, and the confusion matrix provide insights into the model's performance and areas for improvement.
+## Setup and Usage
 
-## Future Work
+### 1. Installation
 
-To enhance the model's performance, several suggestions for future work include fine-tuning the model architecture, exploring different optimization techniques or regularization methods, and investigating transfer learning approaches. The trained model can have potential applications in real-world scenarios such as object recognition, content filtering, or any tasks that require accurate image classification.
+First, create and activate a Python virtual environment.
 
-Feel free to explore the code and resources in this repository. Any feedback or contributions are welcome!
+```bash
+# Create the virtual environment
+python3 -m venv venv
 
+# Activate it (on macOS/Linux)
+source venv/bin/activate
+```
 
+Then, install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. How to Run
+
+The project can be run using the `main.py` script with different modes.
+
+*   **To train the model:**
+    ```bash
+    python main.py --mode train
+    ```
+
+*   **To evaluate the model:**
+    ```bash
+    python main.py --mode evaluate
+    ```
+
+*   **To predict a single image:**
+    ```bash
+    python main.py --mode predict --image_path path/to/your/image.jpg
+    ```
+
+## Technologies Used
+
+*   Python
+*   TensorFlow / Keras
+*   Scikit-learn
+*   NumPy
+*   Matplotlib / Seaborn
+*   Pillow
