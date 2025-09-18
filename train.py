@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout
+from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout, RandomFlip, RandomRotation, RandomZoom, BatchNormalization
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.optimizers import Adam
 
@@ -20,13 +20,25 @@ def load_and_preprocess_data():
 
 def create_model():
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3), name='conv_1'))
+    model.add(tf.keras.Input(shape=(32, 32, 3)))
+    model.add(RandomFlip("horizontal"))
+    model.add(RandomRotation(0.1))
+    model.add(RandomZoom(0.1))
+
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same', name='conv_1'))
+    model.add(BatchNormalization())
     model.add(MaxPool2D((2, 2), name='maxpool_1'))
-    model.add(Conv2D(64, (3, 3), activation='relu', name='conv_2'))
-    model.add(Conv2D(128, (3, 3), activation='relu', name='conv_3'))
+
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='conv_2'))
+    model.add(BatchNormalization())
+
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same', name='conv_3'))
+    model.add(BatchNormalization())
     model.add(MaxPool2D((2, 2), name='maxpool_2'))
+
     model.add(Flatten())
     model.add(Dense(128, activation='relu', name='dense_1'))
+    model.add(BatchNormalization())
     model.add(Dropout(0.25))
     model.add(Dense(10, activation='softmax', name='output'))
     return model
@@ -36,14 +48,14 @@ def train_model():
 
     model = create_model()
 
-    model.compile(optimizer=Adam(learning_rate=0.001),
+    model.compile(optimizer=Adam(learning_rate=0.0001),
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    cp = ModelCheckpoint('model/', monitor='val_accuracy', save_best_only=True)
+    cp = ModelCheckpoint('model/cifar10_model.keras', monitor='val_accuracy', save_best_only=True)
 
     history = model.fit(x_train, y_train,
-                        epochs=10,
+                        epochs=20,
                         batch_size=32,
                         validation_data=(x_test, y_test),
                         callbacks=[cp])

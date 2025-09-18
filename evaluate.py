@@ -9,7 +9,7 @@ from train import load_and_preprocess_data
 def evaluate_model():
     (_, _), (x_test, y_test) = load_and_preprocess_data()
 
-    model = load_model('model/')
+    model = load_model('model/cifar10_model.keras')
 
     loss, accuracy = model.evaluate(x_test, y_test)
     print(f"Test Loss: {loss}")

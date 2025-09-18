@@ -4,7 +4,7 @@ from preprocessing import preprocess_image
 from PIL import Image
 import os
 
-def predict_image(image_path, model_path='model/'):
+def predict_image(image_path, model_path='model/cifar10_model.keras'):
     model = load_model(model_path)
     image = Image.open(image_path)
     processed_image = preprocess_image(image)
