@@ -28,8 +28,9 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           python -c "
+          import os
           from huggingface_hub import HfApi
-          api = HfApi(token=HF_TOKEN)
+          api = HfApi(token=os.environ.get('HF_TOKEN'))
           api.upload_folder(
               folder_path='.',
               repo_id='analyticsbyted/CIFAR10-Classifier',
