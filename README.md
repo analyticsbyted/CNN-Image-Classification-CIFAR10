@@ -1,3 +1,14 @@
+---
+title: CIFAR-10 Image Classifier
+emoji: 🖼️
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: "4.x"
+app_file: app.py
+pinned: false
+---
+
 # CIFAR-10 Image Classification with a Deep Convolutional Neural Network
 
 This project provides a deep learning model to classify images from the CIFAR-10 dataset. The model is a Convolutional Neural Network (CNN) built with TensorFlow and Keras, and it achieves approximately **79% accuracy** on the test set.
