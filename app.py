@@ -32,8 +32,11 @@ def predict(image):
 # Assuming example images are in the 'images' directory
 example_images_dir = "images"
 example_images = [
-    os.path.join(example_images_dir, f) for f in os.listdir(example_images_dir)
-    if f.endswith(('.png', '.jpg', '.jpeg'))
+    os.path.join(example_images_dir, '125893-airplane-flying-png-download-free.png'),
+    os.path.join(example_images_dir, '4-2-car-png-hd.png'),
+    os.path.join(example_images_dir, 'best-cute-cat-names-1660318806.jpeg'),
+    os.path.join(example_images_dir, 'dog-png-30.png'),
+    os.path.join(example_images_dir, '125064-amphibian-frog-download-free-image.png')
 ]
 
 # Create the Gradio interface using Blocks for more control
