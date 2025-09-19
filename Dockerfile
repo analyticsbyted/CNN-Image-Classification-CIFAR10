@@ -14,6 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY preprocessing.py .
 COPY model/cifar10_model.keras model/cifar10_model.keras
+COPY images images
 
 # Expose the port that Gradio runs on
 EXPOSE 7860
